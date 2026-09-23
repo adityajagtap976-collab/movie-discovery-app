@@ -9,13 +9,13 @@ function MovieCard({ id, title, posterUrl, rating = 'N/A', releaseYear }) {
 
   const numericRating = typeof rating === 'number' ? rating : null;
   const borderColor =
-    numericRating == null
-      ? '#6b7280'
-      : numericRating >= 8
-        ? '#22c55e'
-        : numericRating >= 6
-          ? '#eab308'
-          : '#ef4444';
+  numericRating == null || numericRating === 0
+    ? '#6b7280'
+    : numericRating >= 8
+      ? '#22c55e'
+      : numericRating >= 6
+        ? '#eab308'
+        : '#ef4444';
 
   function handleToggleWatchlist(e) {
     e.preventDefault();
