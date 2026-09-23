@@ -15,11 +15,10 @@ class Navbar extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.isScrolled !== this.state.isScrolled) {
-      // eslint-disable-next-line no-console
-      console.log('Navbar scroll state changed to:', this.state.isScrolled);
-    }
+  if (prevState.isScrolled !== this.state.isScrolled) {
+    document.body.dataset.navbarCompact = this.state.isScrolled;
   }
+}
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
