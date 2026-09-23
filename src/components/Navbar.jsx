@@ -1,8 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { WatchlistContext } from '../context/WatchlistContext';
 import styles from '../styles/Navbar.module.css';
 
 class Navbar extends React.Component {
+  static contextType = WatchlistContext;
+
   constructor(props) {
     super(props);
     this.state = { isScrolled: false };
@@ -35,35 +38,20 @@ class Navbar extends React.Component {
     const navClass = this.state.isScrolled
       ? `${styles.navbar} ${styles.scrolled}`
       : styles.navbar;
+    const watchlistCount = this.context?.state.items.length || 0;
 
     return (
       <nav className={navClass}>
         <h1 className={styles.brand}>Movie Discovery</h1>
         <div className={styles.links}>
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              isActive ? `${styles.link} ${styles.active}` : styles.link
-            }
-          >
+          <NavLink to="/" end className={({ isActive }) => (isActive ? `${styles.link} ${styles.active}` : styles.link)}>
             Home
           </NavLink>
-          <NavLink
-            to="/search"
-            className={({ isActive }) =>
-              isActive ? `${styles.link} ${styles.active}` : styles.link
-            }
-          >
+          <NavLink to="/search" className={({ isActive }) => (isActive ? `${styles.link} ${styles.active}` : styles.link)}>
             Search
           </NavLink>
-          <NavLink
-            to="/watchlist"
-            className={({ isActive }) =>
-              isActive ? `${styles.link} ${styles.active}` : styles.link
-            }
-          >
-            Watchlist
+          <NavLink to="/watchlist" className={({ isActive }) => (isActive ? `${styles.link} ${styles.active}` : styles.link)}>
+            Watchlist {watchlistCount > 0 && <span className={styles.badge}>{watchlistCount}</span>}
           </NavLink>
         </div>
       </nav>

@@ -1,8 +1,12 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { useWatchlist } from '../context/WatchlistContext';
 import styles from '../styles/MovieCard.module.css';
 
 function MovieCard({ id, title, posterUrl, rating = 'N/A', releaseYear }) {
+  const { state, dispatch } = useWatchlist();
+  const isInWatchlist = state.items.some((m) => m.id === id);
+
   const numericRating = typeof rating === 'number' ? rating : null;
   const borderColor =
     numericRating == null
@@ -12,6 +16,16 @@ function MovieCard({ id, title, posterUrl, rating = 'N/A', releaseYear }) {
         : numericRating >= 6
           ? '#eab308'
           : '#ef4444';
+
+  function handleToggleWatchlist(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isInWatchlist) {
+      dispatch({ type: 'REMOVE_MOVIE', payload: { id } });
+    } else {
+      dispatch({ type: 'ADD_MOVIE', payload: { id, title, posterUrl, rating, releaseYear } });
+    }
+  }
 
   return (
     <Link className={styles.cardLink} to={`/movie/${id}`}>
@@ -28,6 +42,9 @@ function MovieCard({ id, title, posterUrl, rating = 'N/A', releaseYear }) {
             <span className={styles.rating}>{rating}</span>
             <p className={styles.year}>{releaseYear}</p>
           </div>
+          <button className={styles.watchlistButton} onClick={handleToggleWatchlist}>
+            {isInWatchlist ? '− Remove' : '+ Watchlist'}
+          </button>
         </div>
       </article>
     </Link>
@@ -40,10 +57,6 @@ MovieCard.propTypes = {
   posterUrl: PropTypes.string.isRequired,
   rating: PropTypes.number,
   releaseYear: PropTypes.number,
-};
-
-MovieCard.defaultProps = {
-  rating: 'N/A',
 };
 
 export default MovieCard;
