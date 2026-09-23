@@ -1,11 +1,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { WatchlistContext } from '../context/WatchlistContext';
+import { connect } from 'react-redux';
 import styles from '../styles/Navbar.module.css';
 
 class Navbar extends React.Component {
-  static contextType = WatchlistContext;
-
   constructor(props) {
     super(props);
     this.state = { isScrolled: false };
@@ -38,7 +36,7 @@ class Navbar extends React.Component {
     const navClass = this.state.isScrolled
       ? `${styles.navbar} ${styles.scrolled}`
       : styles.navbar;
-    const watchlistCount = this.context?.state.items.length || 0;
+    const watchlistCount = this.props.watchlistCount;
 
     return (
       <nav className={navClass}>
@@ -59,4 +57,8 @@ class Navbar extends React.Component {
   }
 }
 
-export default Navbar;
+function mapStateToProps(state) {
+  return { watchlistCount: state.watchlist.items.length };
+}
+
+export default connect(mapStateToProps)(Navbar);

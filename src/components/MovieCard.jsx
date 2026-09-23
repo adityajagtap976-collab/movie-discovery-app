@@ -1,29 +1,32 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { useWatchlist } from '../context/WatchlistContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { addMovie, removeMovie } from '../redux/watchlistSlice';
 import styles from '../styles/MovieCard.module.css';
 
 function MovieCard({ id, title, posterUrl, rating = 'N/A', releaseYear }) {
-  const { state, dispatch } = useWatchlist();
-  const isInWatchlist = state.items.some((m) => m.id === id);
+  const dispatch = useDispatch();
+  const isInWatchlist = useSelector((state) =>
+    state.watchlist.items.some((m) => m.id === id)
+  );
 
   const numericRating = typeof rating === 'number' ? rating : null;
   const borderColor =
-  numericRating == null || numericRating === 0
-    ? '#6b7280'
-    : numericRating >= 8
-      ? '#22c55e'
-      : numericRating >= 6
-        ? '#eab308'
-        : '#ef4444';
+    numericRating == null || numericRating === 0
+      ? '#6b7280'
+      : numericRating >= 8
+        ? '#22c55e'
+        : numericRating >= 6
+          ? '#eab308'
+          : '#ef4444';
 
   function handleToggleWatchlist(e) {
     e.preventDefault();
     e.stopPropagation();
     if (isInWatchlist) {
-      dispatch({ type: 'REMOVE_MOVIE', payload: { id } });
+      dispatch(removeMovie({ id }));
     } else {
-      dispatch({ type: 'ADD_MOVIE', payload: { id, title, posterUrl, rating, releaseYear } });
+      dispatch(addMovie({ id, title, posterUrl, rating, releaseYear }));
     }
   }
 

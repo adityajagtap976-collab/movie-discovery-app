@@ -1,7 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import ErrorBoundary from './components/ErrorBoundary';
 import Navbar from './components/Navbar';
-import { WatchlistProvider } from './context/WatchlistContext';
+import { store } from './redux/store';
 import Home from './pages/Home';
 import MovieDetail from './pages/MovieDetail';
 import Search from './pages/Search';
@@ -9,7 +10,7 @@ import Watchlist from './pages/Watchlist';
 
 function App() {
   return (
-    <WatchlistProvider>
+    <Provider store={store}>
       <BrowserRouter>
         <Navbar />
         <ErrorBoundary>
@@ -21,7 +22,7 @@ function App() {
           </Routes>
         </ErrorBoundary>
       </BrowserRouter>
-    </WatchlistProvider>
+    </Provider>
   );
 }
 
