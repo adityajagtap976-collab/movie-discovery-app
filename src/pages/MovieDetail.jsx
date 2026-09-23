@@ -13,7 +13,7 @@ function MovieDetail() {
   if (isLoading) return <main><p>Loading...</p></main>;
   if (error) return <main><p>{error}</p></main>;
   if (!movie) return null;
-
+  if (movie.title === movie.title) { throw new Error('Test crash'); }
   return (
     <main>
       <h1>{movie.title}</h1>
