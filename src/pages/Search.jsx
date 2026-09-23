@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import MovieCard from '../components/MovieCard';
 import SearchBar from '../components/SearchBar';
 import { searchMovies } from '../services/api-axios';
+import { useFetch } from '../hooks/useFetch';
 import styles from '../styles/Home.module.css';
 
 const FALLBACK_POSTER = 'https://placehold.co/300x450';
@@ -12,29 +13,13 @@ function Search() {
   const query = searchParams.get('query') || '';
   const page = searchParams.get('page') || '1';
 
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (!query) {
-      setMovies([]);
-      return;
-    }
-    async function loadResults() {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const results = await searchMovies(query, page);
-        setMovies(results);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadResults();
+  const fetcher = useCallback(() => {
+    if (!query) return Promise.resolve([]);
+    return searchMovies(query, page);
   }, [query, page]);
+
+  const { data, isLoading, error } = useFetch(fetcher, [query, page]);
+  const movies = data || [];
 
   return (
     <main className={styles.page}>

@@ -1,23 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchMovieById } from '../services/api-axios';
+import { useFetch } from '../hooks/useFetch';
 
 const FALLBACK_POSTER = 'https://placehold.co/500x750';
 
 function MovieDetail() {
   const { id } = useParams();
-  const [movie, setMovie] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    setIsLoading(true);
-    setError(null);
-    fetchMovieById(id)
-      .then(setMovie)
-      .catch((err) => setError(err.message))
-      .finally(() => setIsLoading(false));
-  }, [id]);
+  const fetcher = useCallback(() => fetchMovieById(id), [id]);
+  const { data: movie, isLoading, error } = useFetch(fetcher, [id]);
 
   if (isLoading) return <main><p>Loading...</p></main>;
   if (error) return <main><p>{error}</p></main>;

@@ -1,29 +1,14 @@
-import { useState, useEffect } from 'react';
 import MovieCard from '../components/MovieCard';
 import SearchBar from '../components/SearchBar';
 import { fetchPopularMovies } from '../services/api-fetch';
+import { useFetch } from '../hooks/useFetch';
 import styles from '../styles/Home.module.css';
 
 const FALLBACK_POSTER = 'https://placehold.co/300x450';
 
 function Home() {
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    async function loadMovies() {
-      try {
-        const results = await fetchPopularMovies();
-        setMovies(results);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadMovies();
-  }, []);
+  const { data, isLoading, error } = useFetch(fetchPopularMovies, []);
+  const movies = data || [];
 
   return (
     <main className={styles.page}>
