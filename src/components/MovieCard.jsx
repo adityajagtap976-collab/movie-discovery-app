@@ -10,7 +10,10 @@ function MovieCard({ id, title, posterUrl, rating = 'N/A', releaseYear }) {
     state.watchlist.items.some((m) => m.id === id)
   );
 
-  const numericRating = typeof rating === 'number' ? rating : null;
+  const parsedRating = Number(rating);
+  const numericRating = !isNaN(parsedRating) && rating !== null && rating !== '' ? parsedRating : null;
+  const displayRating = numericRating !== null ? numericRating.toFixed(1) : 'N/A';
+
   const borderColor =
     numericRating == null || numericRating === 0
       ? '#6b7280'
@@ -42,7 +45,7 @@ function MovieCard({ id, title, posterUrl, rating = 'N/A', releaseYear }) {
         <div className={styles.body}>
           <h2 className={styles.title}>{title}</h2>
           <div className={styles.meta}>
-            <span className={styles.rating}>{rating}</span>
+            <span className={styles.rating}>{displayRating}</span>
             <p className={styles.year}>{releaseYear}</p>
           </div>
           <button className={styles.watchlistButton} onClick={handleToggleWatchlist}>
@@ -58,7 +61,7 @@ MovieCard.propTypes = {
   id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   posterUrl: PropTypes.string.isRequired,
-  rating: PropTypes.number,
+  rating: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   releaseYear: PropTypes.number,
 };
 

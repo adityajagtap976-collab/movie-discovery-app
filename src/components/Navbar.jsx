@@ -39,7 +39,7 @@ class Navbar extends React.Component {
 
     return (
       <nav className={navClass}>
-        <h1 className={styles.brand}>Movie Discovery</h1>
+        <h1 className={styles.brand}>MovieBox</h1>
         <div className={styles.links}>
           <NavLink to="/" end className={({ isActive }) => (isActive ? `${styles.link} ${styles.active}` : styles.link)}>
             Home
